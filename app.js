@@ -1,4 +1,3 @@
-
 /*
 GAME RULES:
 - The game has 2 players, playing in rounds
@@ -7,3 +6,72 @@ GAME RULES:
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
 - The first player to reach 100 points on GLOBAL score wins the game
 */
+
+var score, round, activePlayer, dice;
+
+init();
+
+document.querySelector(".btn-roll").addEventListener("click", function() {
+    var dice = Math.ceil(Math.random() * 6);
+
+    var diceDom = document.querySelector('.dice');
+    diceDom.style.display = "block";
+    diceDom.src = 'assets/dice-' + dice + '.png';
+
+    if(dice > 1) {
+        round += dice;
+        document.querySelector("#current-" + activePlayer).textContent = round;
+    }else {
+        nextPlayer();
+    }
+
+});
+
+document.querySelector('.btn-hold').addEventListener('click', function() {
+    scores[activePlayer] += round;
+    document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+
+    if(scores[activePlayer] >= 15) {
+        document.querySelector('#name-' + activePlayer).textContent = 'WINNER';
+        document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+        document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+    } else {
+        nextPlayer();
+    }
+});
+
+
+function nextPlayer() {
+    activePlayer = activePlayer === 0 ? 1 : 0;
+    round = 0;
+
+    document.getElementById('current-0').textContent = 0;
+    document.getElementById('current-1').textContent = 0;
+
+    document.querySelector('.player-0-panel').classList.toggle('active');
+    document.querySelector('.player-1-panel').classList.toggle('active');
+    document.querySelector(".dice").style.display = "none";
+}
+
+
+document.querySelector('.bun-new').addEventListener('click', init);
+
+function init() {
+    scores = [0, 0];
+    round = 0;
+    activePlayer = 0;
+
+
+    // document.querySelector("#current-" + activePlayer).textContent = dice;
+    document.querySelector(".dice").style.display = "none";
+
+    document.getElementById('score-0').textContent = 0;
+    document.getElementById('score-1').textContent = 0;
+    document.getElementById('current-0').textContent = 0;
+    document.getElementById('current-1').textContent = 0;
+    document.getElementById('name-0').textContent = 'Player 1';
+    document.getElementById('name-1').textContent = 'Player 2';
+    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('winner');
+    document.querySelector('.player-0-panel').classList.add('winner');
+}
